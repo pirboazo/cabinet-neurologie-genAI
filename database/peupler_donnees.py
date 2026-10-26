@@ -10,16 +10,17 @@ Il ajoute :
     - 5 comptes-rendus de consultation (pour les 5 premiers patients,
       qui sont donc déjà venus à leur rendez-vous)
 
-À lancer UNE SEULE FOIS, depuis le dossier database/ :
-    python3 peupler_donnees.py
+À lancer UNE SEULE FOIS, depuis la racine du projet :
+    python3 database/peupler_donnees.py
 """
 
 import sqlite3
+from pathlib import Path
 
 # ------------------------------------------------------------------
 # ÉTAPE 1 : connexion à la base de données existante
 # ------------------------------------------------------------------
-connexion = sqlite3.connect("cabinet.db")
+connexion = sqlite3.connect(Path(__file__).resolve().parent / "cabinet.db")
 curseur = connexion.cursor()
 
 
@@ -60,14 +61,14 @@ print(f"✅ {len(ids_patients)} patients ajoutés (identifiants {ids_patients[0]
 # ÉTAPE 3 : un rendez-vous pour chaque patient
 # ------------------------------------------------------------------
 # Motifs et dates variés, juste pour que les données soient réalistes.
-# Les 5 premiers rendez-vous sont marqués "effectué" (le patient est déjà venu),
+# Les 5 premiers rendez-vous sont marqués "honoré" (le patient est déjà venu),
 # les 5 suivants sont "prévu" (rendez-vous à venir).
 rendez_vous = [
-    ("2026-08-01", "09:00", "Suivi migraines",              "effectué"),
-    ("2026-08-01", "10:00", "Contrôle épilepsie",            "effectué"),
-    ("2026-08-02", "09:30", "Suivi post-AVC",                "effectué"),
-    ("2026-08-02", "11:00", "Bilan neurologique",            "effectué"),
-    ("2026-08-03", "14:00", "Suivi douleurs neuropathiques", "effectué"),
+    ("2026-08-01", "09:00", "Suivi migraines",              "honoré"),
+    ("2026-08-01", "10:00", "Contrôle épilepsie",            "honoré"),
+    ("2026-08-02", "09:30", "Suivi post-AVC",                "honoré"),
+    ("2026-08-02", "11:00", "Bilan neurologique",            "honoré"),
+    ("2026-08-03", "14:00", "Suivi douleurs neuropathiques", "honoré"),
     ("2026-09-15", "09:00", "Contrôle Parkinson",            "prévu"),
     ("2026-09-15", "10:30", "Suivi céphalées",               "prévu"),
     ("2026-09-16", "09:00", "Première consultation",         "prévu"),
@@ -76,7 +77,7 @@ rendez_vous = [
 ]
 
 # On garde aussi les identifiants des rendez-vous, pour les 5 premiers
-# (ceux qui sont "effectués"), car on va leur associer un compte-rendu.
+# (ceux qui sont "honorés"), car on va leur associer un compte-rendu.
 ids_rdv = []
 
 for patient_id, rdv in zip(ids_patients, rendez_vous):
@@ -93,7 +94,7 @@ print(f"✅ {len(ids_rdv)} rendez-vous ajoutés")
 # ------------------------------------------------------------------
 # ÉTAPE 4 : un compte-rendu de consultation pour les 5 premiers patients
 # ------------------------------------------------------------------
-# Ce sont ceux dont le rendez-vous est marqué "effectué" plus haut.
+# Ce sont ceux dont le rendez-vous est marqué "honoré" plus haut.
 consultations = [
     ("Suivi migraines",              "Patient rapporte 3 crises/mois, intensité modérée.",       "Migraine chronique sans aura",         "Poursuite du traitement de fond, réévaluation dans 3 mois", "Dr. Martin"),
     ("Contrôle épilepsie",           "Aucune crise depuis la dernière consultation.",             "Épilepsie stable sous traitement",     "Maintien du traitement actuel",                              "Dr. Martin"),
@@ -125,5 +126,5 @@ connexion.close()
 
 print("\n🎉 Base de données peuplée avec succès !")
 print("   - 10 patients")
-print("   - 10 rendez-vous (5 effectués, 5 à venir)")
+print("   - 10 rendez-vous (5 honorés, 5 à venir)")
 print("   - 5 comptes-rendus de consultation")

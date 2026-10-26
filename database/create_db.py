@@ -5,15 +5,16 @@ Ce script crée la base de données SQLite du cabinet de neurologie.
 On l'exécute UNE SEULE FOIS pour créer le fichier "cabinet.db"
 et les tables qu'il contient (patients, rendez_vous, consultations).
 
-Pour l'exécuter : ouvrir un terminal dans ce dossier et taper :
-    python create_db.py
+Pour l'exécuter, depuis la racine du projet :
+    python3 database/create_db.py
 """
 
 import sqlite3
+from pathlib import Path
 
 # 1. On se connecte à la base de données.
 #    Si le fichier "cabinet.db" n'existe pas encore, SQLite le crée automatiquement.
-connexion = sqlite3.connect("cabinet.db")
+connexion = sqlite3.connect(Path(__file__).resolve().parent / "cabinet.db")
 
 # 2. Le "curseur" est l'objet qui nous permet d'exécuter des commandes SQL.
 curseur = connexion.cursor()
